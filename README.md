@@ -56,11 +56,47 @@
     "Physics Test": {
       password: "PHY123",
       questions: [
-        {
-          question: "Unit of force?",
-          options: ["Newton", "Joule", "Watt", "Pascal"],
-          answer: "Newton"
-        }
+  {
+    question: "An inclined plane ends into a vertical loop of radius r. A particle of mass m is released from the topmost point. Point C and the center of the circular track are at the same horizontal level. What is the normal force at point C?",
+    options: ["8 mg", "7 mg", "1 mg", "3 mg"],
+    answer: "7 mg"
+  },
+
+  {
+    question: "A stone is projected vertically upward to reach a maximum height h. What is the ratio of its kinetic energy to potential energy at height (4/5)h?",
+    options: ["5 : 4", "4 : 5", "1 : 4", "4 : 1"],
+    answer: "1 : 4"
+  },
+
+  {
+    question: "A running man has half the kinetic energy of a boy of half his mass. The man speeds up by 1 m/s to have the same kinetic energy as the boy. What was the original speed of the man?",
+    options: ["√2 m/s", "(√2 − 1) m/s", "1/(√2 − 1) m/s", "1/√2 m/s"],
+    answer: "(√2 − 1) m/s"
+  },
+
+  {
+    question: "A 500 g ball is released from a height of 4 m. Each time it hits the ground, it loses 25% of its energy. What is the kinetic energy after the 3rd hit?",
+    options: ["15 J", "11.25 J", "8.44 J", "None of these"],
+    answer: "8.44 J"
+  },
+
+  {
+    question: "A 1.5 kg block is initially at rest on a frictionless horizontal surface. A force F = (4 − x²) N acts on it, where x is in meters. What is the maximum kinetic energy between x = 0 and x = 2 m?",
+    options: ["2.33 J", "3.33 J", "5.33 J", "6.67 J"],
+    answer: "3.33 J"
+  },
+
+  {
+    question: "A body is displaced from (0,0) to (1 m, 1 m) along the path x = y by a force F = (x² î + y ĵ) N. What is the work done?",
+    options: ["4/3 J", "5/6 J", "3/2 J", "7/5 J"],
+    answer: "4/3 J"
+  },
+
+  {
+    question: "The distance x moved by a body of mass 0.5 kg varies with time t as x = 3t² + 4t + 5 (x in m, t in s). What is the work done by the force in the first 2 seconds?",
+    options: ["25 J", "50 J", "60 J", "100 J"],
+    answer: "50 J"
+  }
       ]
     },
     "Computer Basics": {
