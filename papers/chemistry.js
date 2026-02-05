@@ -27,16 +27,16 @@ window.questionPapers["Chemistry Test"] = {
    It has 5 unpaired electrons, hence n = 5`
   },
 
-  {
-    question: "Which among the following is NOT an odd electron molecule?",
-    options: ["CO", "NO", "NO2", "ClO2"],
-    answer: "CO",
+  {/*3*/
+    question: "Which of the following is an example of super octet molecules?",
+    options: ["ClF<sub>3</sub>","PCl<sub>5</sub>","IF<sub>7</sub>","All of these"],
+    answer: "All of these",
     solution: "CO has all electrons paired; the others are odd-electron molecules."
   },
 
   {
     question: "Total number of sigma bonds involved in ethylene molecule are",
-    options: ["3", "5", "2", "1"],
+    options: ["CO", "NO", "NO<sub>2</sub>", "ClO<sub>2</sub>"],
     answer: "5"
   },
 
@@ -288,12 +288,12 @@ window.questionPapers["Chemistry Test"] = {
     answer: "CO2"
   },
   {
-    question: "Q39. (Diagram-based question – refer to given figure)",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    answer: "Option A"
+    question: "Number of S-O bond in S<sub>2</sub>O<sub>8</sub><sup>2-</sup> and number of S-S bond in Rhombic sulphur is respectively:",
+    options: ["8,8", "6,8", "2,4", "4,2"],
+    answer: "8,8"
   },
 
-  {
+  {/*40*/
     question: " Amongst the following, the total number of species NOT having eight electrons around central atom in its outermost shell is: NH3, AlCl3, BeCl2, CCl4, PCl5",
     options: ["2", "4", "1", "3"],
     answer: "3"
@@ -352,15 +352,15 @@ window.questionPapers["Chemistry Test"] = {
   },
 
   {
-    question: "(Diagram-based question – refer to given figure)",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    answer: "Option A"
+    question: "Which of the following is a nonpolar molecular solid? ",
+    options: ["HCL", "SO<sub>2</sub>", "CCL<sub>4</sub>", "ALN"],
+    answer: "CCL<sub>4</sub>"
   },
 
   {
-    question: "(Diagram-based question – refer to given figure)",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    answer: "Option A"
+    question: "The pair that contains two P-H bonds in each of the oxoacids is:",
+    options: ["H<sub>3</sub>PO<sub>2</sub> & H<sub>4</sub>P<sub>2</sub>O<sub>5</sub>", "H<sub>4</sub>P<sub>2</sub>O<sub>5</sub> & H<sub>4</sub>P<sub>2</sub>O<sub>6</sub>", "H<sub>3</sub>PO<sub>3</sub> & H<sub>3</sub>PO<sub>2</sub>", "H<sub>4</sub>P<sub>2</sub>O<sub>5</sub> & H<sub>3</sub>PO<sub>3</sub>"],
+    answer: "H<sub>3</sub>PO<sub>2</sub> & H<sub>4</sub>P<sub>2</sub>O<sub>5</sub> "
   },
 
   {
