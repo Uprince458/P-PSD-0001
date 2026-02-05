@@ -8,9 +8,390 @@ window.questionPapers["Physics Test"] = {
   password: "PHY123",
   questions: [
     {
-      question: "Which quantity is a scalar?",
-      options: ["Velocity", "Force", "Momentum", "Speed"],
-      answer: "Speed"
-    }
+  question: `
+  Q1) An inclined plane ends into a vertical loop of radius r. A particle of mass m is released from the topmost point. 
+  Point C and the center of the circular track are at the same horizontal level. 
+  What is the normal force at point C?
+
+  <div style="font-family: monospace; text-align:center; margin-top:10px;">
+  <pre>
+      ●  Start
+      |
+      |  Inclined Plane
+      |
+      |__________
+                  \
+                   \
+                    O ---- C
+                  (Vertical Loop)
+  </pre>
+  </div>
+  `,
+  options: ["8 mg", "7 mg", "1 mg", "3 mg"],
+  answer: "7 mg"
+},
+
+  {
+    question: "Q2) A stone is projected vertically upward to reach a maximum height h. What is the ratio of its kinetic energy to potential energy at height (4/5)h?",
+    options: ["5 : 4", "4 : 5", "1 : 4", "4 : 1"],
+    answer: "1 : 4"
+  },
+
+  {
+    question: "Q3) A running man has half the kinetic energy of a boy of half his mass. The man speeds up by 1 m/s to have the same kinetic energy as the boy. What was the original speed of the man?",
+    options: ["√2 m/s", "(√2 − 1) m/s", "1/(√2 − 1) m/s", "1/√2 m/s"],
+    answer: "(√2 − 1) m/s"
+  },
+
+  {
+    question: "Q4) A 500 g ball is released from a height of 4 m. Each time it hits the ground, it loses 25% of its energy. What is the kinetic energy after the 3rd hit?",
+    options: ["15 J", "11.25 J", "8.44 J", "None of these"],
+    answer: "8.44 J"
+  },
+
+  {
+    question: "Q5) A 1.5 kg block is initially at rest on a frictionless horizontal surface. A force F = (4 − x²) N acts on it, where x is in meters. What is the maximum kinetic energy between x = 0 and x = 2 m?",
+    options: ["2.33 J", "3.33 J", "5.33 J", "6.67 J"],
+    answer: "3.33 J"
+  },
+
+  {
+    question: "Q6) A body is displaced from (0,0) to (1 m, 1 m) along the path x = y by a force F = (x² î + y ĵ) N. What is the work done?",
+    options: ["4/3 J", "5/6 J", "3/2 J", "7/5 J"],
+    answer: "4/3 J"
+  },
+
+  {
+    question: "Q7) The distance x moved by a body of mass 0.5 kg varies with time t as x = 3t² + 4t + 5 (x in m, t in s). What is the work done by the force in the first 2 seconds?",
+    options: ["25 J", "50 J", "60 J", "100 J"],
+    answer: "50 J"
+  },
+  {
+  question: `
+  Q8) The U(x)–x curve for a system is shown in the figure. Its force curve will be:
+
+  <div style="text-align:center; margin-top:10px;">
+    <img src="images/physics-paper-1-q8.png" alt="U(x)-x graph" style="max-width:100%; height:auto;">
+  </div>
+  `,
+  options: ["A", "B", "C", "D"],
+  answer: "B"
+},
+{
+  question: "Q9) The energy required to accelerate a car from 10 m/s to 20 m/s is how many times the energy required to accelerate the car from rest to 10 m/s?",
+  options: ["Equal", "4 times", "2 times", "3 times"],
+  answer: "3 times"
+},
+{
+  question: "Q10) A man pushes a wall and fails to displace it. He does:",
+  options: [
+    "Negative work",
+    "Positive but not maximum work",
+    "No work at all",
+    "Maximum work"
+  ],
+  answer: "No work at all"
+},
+{
+  question: `
+  Q11) A certain system has potential energy given by  
+  U(x) = −ax² + bx⁴ where a, b > 0.  
+  Which value of x is an unstable equilibrium point?
+  `,
+  options: ["0", "√(a/2b)", "−√(a/2b)", "√(a/b)"],
+  answer: "0"
+} ,
+{
+  question: `
+  Q12) A body of mass m at rest is subjected to a constant force F for time t.  
+  The kinetic energy at time t is:
+  `,
+  options: ["F² / 2m", "2F²t² / m", "F²t² / m", "F²t² / 3m"],
+  answer: "F²t² / 2m"
+},
+{
+  question: `
+  Q13) A force F = 2x² − x + 4 acts on a body of mass 3 kg and displaces it from x = 0 to x = 3 m.  
+  The work done by the force is:
+  `,
+  options: ["30.5 J", "35.5 J", "15.5 J", "25.5 J"],
+  answer: "35.5 J"
+},
+{
+  question: `
+  Q14) The average force necessary to stop a ball of mass 20 g and speed 250 m/s as it penetrates mud at a distance of 12 cm is:
+  `,
+  options: ["5.2 × 10³ N", "750 N", "625 N", "520 N"],
+  answer: "520 N"
+},
+{
+  question: `
+  Q15) A particle of mass m at rest is acted upon by a force F for a time t.  
+  Its kinetic energy after time t is:
+  `,
+  options: ["F²t² / m", "F²t² / 2m", "F²t² / 3m", "Ft / 2m"],
+  answer: "F²t² / 2m"
+},
+{
+  question: `
+  Q16) If a force F = 4i + 5j causes a displacement s = 3i + 6k, work done is:
+  `,
+  options: ["4 × 6 unit", "6 × 3 unit", "5 × 6 unit", "4 × 3 unit"],
+  answer: "4 × 3 unit"
+},
+{
+  question: `
+  Q17) The conservative force on a particle is  
+  F = (3x² + yz)i + (3y² + xz)j + (3z² + xy)k.  
+  The expression of potential energy U is:
+  `,
+  options: [
+    "x³ + y³ + z³ + xyz + c",
+    "−(x³ + y³ + z³ + xyz) + c",
+    "x²y + k",
+    "None of these"
+  ],
+  answer: "−(x³ + y³ + z³ + xyz) + c"
+},
+{
+  question: `
+  Q18) A particle moves from position (3i + 2j − 6k) to (14i + 13j + 9k) due to a uniform force (4i + j + 3k).  
+  If displacement is in metre, work done will be:
+  `,
+  options: ["250 J", "300 J", "100 J", "200 J"],
+  answer: "300 J"
+},
+{
+  question: `
+  Q19) A time-dependent force F = 6t acts on a particle of mass 1 kg.  
+  If the particle starts from rest, the work done during the first 1 second is:
+  `,
+  options: ["9 J", "18 J", "4.5 J", "22 J"],
+  answer: "18 J"
+},
+{
+  question: "Q20) A uniform chain of length 2 m and mass 4 kg lies on a table with 60 cm hanging freely. The work done in pulling the entire chain onto the table is:",
+  options: ["7.2 J", "3.6 J", "120 J", "1200 J"],
+  answer: "7.2 J"
+},
+{
+  question: "Q21) A 2 kg block moving at 4 m/s strikes a spring (k = 10000 N/m). Kinetic friction is 15 N. The compression of the spring is:",
+  options: ["5.5 cm", "2.5 cm", "11.0 cm", "8.5 cm"],
+  answer: "5.5 cm"
+},
+{
+  question: "Q22) If the potential energy of a spring stretched by 2 cm is U, then the potential energy when stretched by 8 cm is:",
+  options: ["4U", "8U", "16U", "2U"],
+  answer: "16U"
+},
+{
+  question: "Q23) A 10 kg ball moving at 10 m/s collides elastically with a 5 kg ball moving at 4 m/s in the same direction. Their velocities after collision are:",
+  options: ["6 m/s, 12 m/s", "12 m/s, 6 m/s", "12 m/s, 10 m/s", "12 m/s, 25 m/s"],
+  answer: "6 m/s, 12 m/s"
+},
+{
+  question: `
+ Q24) A particle is placed at point A on a frictionless track as shown. It is gently pushed to the right. The speed at point B is:
+
+[Diagram: Curved track with heights marked 1 m and 0.5 m]
+  `,
+  options: ["2√10 m/s", "10 m/s", "√10 m/s", "20 m/s"],
+  answer: "√10 m/s"
+},
+{
+  question: "Q25) A 100 kg block slides 10 m on a horizontal surface with coefficient of friction 0.4. Work done against friction is (g = 10 m/s²):",
+  options: ["4200 J", "4000 J", "4500 J", "3900 J"],
+  answer: "4000 J"
+},
+{
+  question: `
+ Q26) The force-displacement graph of a moving body is shown. The work done from x = 0 to x = 35 m is:
+
+[Diagram: Force vs displacement graph]
+  `,
+  options: ["50 J", "25 J", "287.5 J", "200 J"],
+  answer: "287.5 J"
+},
+{
+  question: "Q27) A man places a chain of mass m and length l on a table. When half the chain is vertical, he releases it. The work done by the man is:",
+  options: ["−mgℓ/2", "mgℓ/4", "−3mgℓ/8", "−mgℓ/8"],
+  answer: "−mgℓ/8"
+},
+{
+  question: "Q28) The potential energy of a body is U = 9/x² − 2/x. The position where its speed is maximum is:",
+  options: ["x = +3 m", "x = −3 m", "x = 9 m", "x = −9 m"],
+  answer: "x = +3 m"
+},
+{
+  question: "Q29) A 0.5 kg mass moving at 1.5 m/s compresses a spring of force constant 50 N/m. The maximum compression is:",
+  options: ["0.15 m", "0.12 m", "1.5 m", "0.5 m"],
+  answer: "0.15 m"
+},
+{
+  question: `
+ Q30) A vertical spring of force constant k is fixed on a table. A ball of mass m at a height h above the free upper end of the spring falls vertically and compresses the spring by a distance d. The net work done on the body is:
+
+[Diagram: Ball falling from height h onto vertical spring, compressing it by d]
+  `,
+  options: [
+    "mg(h + d) + ½kd²",
+    "mg(h + d) − ½kd²",
+    "mg(h − d) − ½kd²",
+    "mg(h − d) + ½kd²"
+  ],
+  answer: "mg(h − d) + ½kd²"
+},
+{
+  question: "Q31) A spring with spring constant k is extended from x = 0 to x = x₁. The work done is:",
+  options: ["kx₁²", "½kx₁²", "2kx₁²", "2kx₁"],
+  answer: "½kx₁²"
+},
+{
+  question: "Q32) If the velocity of a body becomes twice its previous velocity, its kinetic energy becomes:",
+  options: ["2 times", "½ times", "4 times", "1 time"],
+  answer: "4 times"
+},
+{
+  question: "Q33) A light body and a heavy body have equal kinetic energy. Which one has greater momentum?",
+  options: [
+    "The light body",
+    "The heavy body",
+    "Both have equal momentum",
+    "Cannot be determined without additional information"],
+  answer: "The heavy body"
+},
+{
+  question: "Q34) A 50 kg man carrying a 20 kg load climbs 20 steps of height 0.25 m each. The minimum work done by the man on the load is:",
+  options: ["5 J", "350 J", "1000 J", "3540 J"],
+  answer: "1000 J"
+},
+{
+  question: "Q35) A raindrop of mass 1 g falls from a height of 1 km and hits the ground with a speed of 50 m/s. If g = 10 m/s², the work done by (i) gravity and (ii) air resistance is:",
+  options: [
+    "(i) −10 J, (ii) −8.25 J",
+    "(i) 1.25 J, (ii) −8.25 J",
+    "(i) 100 J, (ii) 8.75 J",
+    "(i) 10 J, (ii) −8.75 J"
+  ],
+  answer: "(i) 10 J, (ii) −8.75 J"
+},
+{
+  question: "Q36) A 0.5 kg ball is thrown vertically upward with a speed of 14 m/s and reaches a maximum height of 8 m. How much energy is dissipated due to air resistance during ascent?",
+  options: ["19.6 J", "4.9 J", "10 J", "9.8 J"],
+  answer: "9.8 J"
+},
+{
+  question: "Q36) A body of mass m is lifted to a height of 1 m in 30 s by one man, and by another man to the same height in 60 s. The work done by them is in the ratio:",
+  options: ["1 : 2", "1 : 1", "2 : 1", "4 : 1"],
+  answer: "1 : 1"
+},
+{
+  question: "Q37) A block of mass 100 g moves on a smooth surface with acceleration a = 2x. If the change in kinetic energy is (xⁿ / 10), the value of n is:",
+  options: ["8", "4", "3", "2"],
+  answer: "4"
+},
+{
+  question: "Q38) A particle of mass 100 g is thrown vertically upward with a speed of 5 m/s. The work done by gravity during the upward motion is:",
+  options: ["1.25 J", "0.5 J", "−0.5 J", "−1.25 J"],
+  answer: "−1.25 J"
+},
+{
+  question: "Q39) A body of mass (5 ± 0.5) kg moves with velocity (20 ± 0.4) m/s. Its kinetic energy is:",
+  options: [
+    "(500 ± 0.14) J",
+    "(500 ± 140) J",
+    "(1000 ± 0.14) J",
+    "(1000 ± 140) J"
+  ],
+  answer: "(1000 ± 140) J"
+},
+{
+  question: `
+ Q40) A block of mass m is released from rest at point A on a smooth inclined plane. The spring compression is maximum when the speed of the block is:
+
+[Diagram: Block sliding down incline (θ), attached to spring k, μ = 0]
+  `,
+  options: [
+    "mg sinθ / k",
+    "2mg sinθ / k",
+    "mg cosθ / k",
+    "mg / k"
+  ],
+  answer: "mg sinθ / k"
+},
+{
+  question: "Q41) A force of 5 N making an angle θ with the horizontal acts on an object and displaces it by 0.4 m along the horizontal direction. If the object gains kinetic energy of 1 J, the horizontal component of the force is:",
+  options: ["1.5 N", "2.5 N", "3.5 N", "4.5 N"],
+  answer: "2.5 N"
+},
+{
+  question: "Q42) A body of mass 4 kg moving with velocity 12 m/s collides with another body of mass 6 kg at rest. If they stick together after collision, the loss of kinetic energy of the system is:",
+  options: ["Zero", "288 J", "172.8 J", "144 J"],
+  answer: "172.8 J"
+},
+{
+  question: "Q43) A particle moves from position r₁ = 3i + 2j − 6k to r₂ = 14i + 13j + 9k under the action of force F = 4i + j + 3k N. The work done by this force is:",
+  options: ["100 J", "50 J", "200 J", "75 J"],
+  answer: "100 J"
+},
+{
+  question: "Q44) The work done by all the forces (external and internal) on a system equals the change in:",
+  options: ["Total energy", "Kinetic energy", "Potential energy", "None of these"],
+  answer: "Kinetic energy"
+},
+{
+  question: `
+ Q45) A greased block P may slide along any of the three frictionless slopes A, B, or C to reach the ground. 
+The work done on the block by gravity is W_A, W_B, and W_C respectively.
+
+[Diagram: Block at height sliding down three different frictionless paths A, B, C]
+`,
+  options: [
+    "W_A < W_B < W_C",
+    "W_A > W_B > W_C",
+    "W_A = W_B = W_C",
+    "None of the above"
+  ],
+  answer: "W_A = W_B = W_C"
+},
+{
+  question: "Q46) The displacement x of a particle moving in one dimension under a constant force is related to time by x = √x + 3, where x is in metre and t in second. The work done by the force in the first 6 seconds is:",
+  options: ["9 J", "6 J", "3 J", "0 J"],
+  answer: "9 J"
+},
+{
+  question: "Q47) The force constant of one wire is k and that of another wire is 2k. When both wires are stretched through the same distance, the ratio of work done is:",
+  options: [
+    "W₂ = 4W₁",
+    "W₂ = 2W₁",
+    "W₂ = W₁",
+    "W₂ = 0.5W₁"
+  ],
+  answer: "W₂ = 2W₁"
+},
+{
+  question: "Q48) How much work must be done by a force on a 50 kg body to accelerate it from rest to 20 m/s in 10 s in the direction of the force?",
+  options: ["10⁻³ J", "10 J", "2 × 10³ J", "4 × 10⁴ J"],
+  answer: "2 × 10³ J"
+},
+{
+  question: `
+Q49) Arrange the four force–displacement graphs in descending order of total work done.
+W₁, W₂, W₃, W₄ correspond to figures a, b, c, and d respectively.
+
+[Diagram: Four F–x graphs labeled Figure-a, Figure-b, Figure-c, Figure-d]
+`,
+  options: [
+    "W₃ > W₂ > W₁ > W₄",
+    "W₃ > W₂ > W₄ > W₁",
+    "W₂ > W₃ > W₄ > W₁",
+    "W₂ > W₃ > W₁ > W₄"
+  ],
+  answer: "W₃ > W₂ > W₁ > W₄"
+} ,
+{ question: "Q50) The displacement x of a particle moving in one dimension under a constant force is related to time by x = √x + 3, where x is in metre and t in second. The work done by the force in the first 6 seconds is:",
+  options: ["9 J", "6 J", "3 J", "0 J"],
+  answer: "9 J"
+},
   ]
 };
