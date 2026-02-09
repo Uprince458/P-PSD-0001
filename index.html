@@ -122,7 +122,7 @@
   </select>
 
   <br><br>
-
+  <button onclick="backToMainHome()" style="margin-right: 10px;">Back</button>
   <input type="password" id="paperPassword" placeholder="Enter paper password" />
 
   <br><br>
@@ -144,7 +144,7 @@
   <h2>Result</h2>
   <p id="scoreText"></p>
   <div id="answerReview"></div>
-  <button onclick="location.reload()">Exit</button>
+ <button onclick="exitToHome()">Exit</button>
 </div>
 
 
@@ -257,6 +257,19 @@
     document.getElementById('scoreText').innerHTML = `<b>Score:</b> ${score} / ${questions.length}`;
     document.getElementById('answerReview').innerHTML = review;
   }
+
+  function exitToHome() {
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('mainHome').style.display = 'flex';
+}
+
+function backToMainHome() {
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('mainHome').style.display = 'flex';
+}
+
 
   function openPapers() {
   document.getElementById('mainHome').style.display = 'none';
