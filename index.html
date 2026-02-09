@@ -19,25 +19,45 @@
 <body><header>
   <h1>STC</h1>
   <p><h2>MCQ TEST</h2></p>
-</header><!-- PASSWORD GATE --><div class="container" id="login">
+</header>
+  
+  <!-- PASSWORD GATE -->
+  <div class="container" id="login">
   <h2>Enter Access Password</h2>
   <input type="password" id="accessPassword" placeholder="Enter password" />
   <br><br>
   <button onclick="checkAccess()">Enter</button>
   <p id="loginError" class="wrong"></p>
-</div><!-- HOME --><div class="container" id="home" style="display:none;">
+</div>
+  
+  <!-- HOME PAGE -->
+<div class="container" id="home" style="display:none;">
   <h2>Select Question Paper</h2>
-  <select id="paperSelect"></select>
+
+  <select id="paperSelect">
+    <option value="">-- Select Paper --</option>
+  </select>
+
   <br><br>
-  <input type="password" id="paperPassword" placeholder="Paper password" />
+
+  <input type="password" id="paperPassword" placeholder="Enter paper password" />
+
   <br><br>
+
   <button onclick="startTest()">Start Test</button>
+
   <p id="paperError" class="wrong"></p>
-</div><!-- QUIZ --><div class="container" id="quiz" style="display:none;">
+</div>
+  
+  <!-- QUIZ -->
+  <div class="container" id="quiz" style="display:none;">
   <div class="timer">Time Left: <span id="time"></span></div>
   <form id="quizForm"></form>
   <button onclick="submitTest()">Submit Test</button>
-</div><!-- RESULT --><div class="container" id="result" style="display:none;">
+</div>
+  
+  <!-- RESULT -->
+  <div class="container" id="result" style="display:none;">
   <h2>Result</h2>
   <p id="scoreText"></p>
   <div id="answerReview"></div>
