@@ -14,6 +14,67 @@
     .wrong { color: red; }
     .timer { font-size: 18px; color: #e74c3c; font-weight: bold; text-align: right; }
     input { padding: 8px; width: 100%; max-width: 300px; }
+
+       /*   to be added  */
+    /* ===== HOME PAGE LAYOUT ===== */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 220px;
+  background: #2c3e50;
+  color: white;
+  padding-top: 20px;
+}
+
+.sidebar h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.sidebar button {
+  width: 90%;
+  margin: 10px auto;
+  display: block;
+  background: #34495e;
+}
+
+.sidebar button:hover {
+  background: #1abc9c;
+}
+
+/* ===== HOME CONTENT ===== */
+.home-content {
+  flex: 1;
+  padding: 40px;
+  background: linear-gradient(to right, #f4f6f8, #ecf0f1);
+}
+
+.home-box {
+  background: white;
+  padding: 40px;
+  max-width: 700px;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.home-box h1 {
+  font-size: 48px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.home-box p {
+  font-size: 18px;
+  color: #555;
+}
+    
   </style>
 </head>
 <body><header>
@@ -29,6 +90,28 @@
   <button onclick="checkAccess()">Enter</button>
   <p id="loginError" class="wrong"></p>
 </div>
+
+ <!-- MAIN HOME PAGE -->
+<div id="mainHome" class="main-layout" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>MENU</h3>
+    <button onclick="openPapers()">📝 Question Papers</button>
+    <button onclick="showTopics()">📚 Topics</button>
+    <button onclick="showAbout()">ℹ️ About STC</button>
+  </div>
+
+  <!-- CONTENT -->                                   <!-- to added -->
+  <div class="home-content">
+    <div class="home-box" id="homeContent">
+      <h1>STC</h1>
+      <p>Welcome to the Secure MCQ Test Portal</p>
+      <p>Select an option from the left menu to continue.</p>
+    </div>
+  </div>
+
+</div> 
   
   <!-- HOME PAGE -->
 <div class="container" id="home" style="display:none;">
@@ -99,7 +182,7 @@
     const pass = document.getElementById('accessPassword').value;
     if (pass === GLOBAL_PASSWORD) {
       document.getElementById('login').style.display = 'none';
-      document.getElementById('home').style.display = 'block';
+      document.getElementById('mainhome').style.display = 'flex';
       loadPapers();
     } else {
       document.getElementById('loginError').innerText = 'Invalid password';
@@ -174,5 +257,32 @@
     document.getElementById('scoreText').innerHTML = `<b>Score:</b> ${score} / ${questions.length}`;
     document.getElementById('answerReview').innerHTML = review;
   }
+
+  function openPapers() {
+  document.getElementById('mainHome').style.display = 'none';
+  document.getElementById('home').style.display = 'block';
+  loadPapers();
+ }
+
+ function showTopics() {
+  document.getElementById('homeContent').innerHTML = `
+    <h1>Topics</h1>
+    <p>• Physics</p>
+    <p>• Chemistry</p>
+    <p>• Computer Science</p>
+    <p>(More coming soon)</p>
+  `;
+ }
+
+
+                                                            
+ function showAbout() {
+  document.getElementById('homeContent').innerHTML = `
+    <h1>About STC</h1>
+    <p>STC is a secure MCQ-based testing platform.</p>
+    <p>Designed for practice, evaluation, and learning.</p>
+  `;
+ }
+  
 </script></body>
 </html>
