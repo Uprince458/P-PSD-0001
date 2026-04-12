@@ -7,6 +7,16 @@
     body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; }
     header { background: #2c3e50; color: #fff; padding: 15px; text-align: center; }
     .container { max-width: 900px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #introCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.login-container {
+  z-index: 1000;
+}
     button { padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
     button:hover { background: #2980b9; }
     .question { margin-bottom: 20px; }
@@ -81,9 +91,13 @@
   <h1>STC</h1>
   <p><h2>MCQ TEST</h2></p>
 </header>
+  <canvas id="introCanvas"></canvas>
+  <div class="login-container" id="introLogin">
+    <h2>Welcome</h2>
+  </div>
   
   <!-- PASSWORD GATE -->
-  <div class="container" id="login">
+  <div class="container" id="mainLogin" style="display:none;">
   <h2>Enter Access Password</h2>
   <input type="password" id="accessPassword" placeholder="Enter password" />
   <br><br>
@@ -798,5 +812,88 @@ function spGetPhysics() {
   if (spPhysicsPool.length === 0) spPhysicsPool = spShuffle([...SP_PHYSICS]);
   return spPhysicsPool.pop();
 }
+
+const canvas = document.getElementById("introCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+let centerX = canvas.width / 2;
+let centerY = canvas.height / 2;
+let explode = false;
+let explosionRadius = 0;
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (centerX - this.x) * 0.006;
+        this.speedY = (centerY - this.y) * 0.006;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (!explode && Math.hypot(this.x - centerX, this.y - centerY) < 6) {
+            explode = true;
+
+            setTimeout(() => {
+                showMainLogin();
+            }, 1200);
+        }
+    }
+
+    draw() {
+        ctx.fillStyle = "rgba(180,180,180,0.8)";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 400; i++) {
+    particles.push(new Particle());
+}
+
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (!explode) {
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+    } else {
+        explosionRadius += 4;
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, explosionRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(80,80,80,0.5)";
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 40, 0, Math.PI * 2);
+        ctx.fillStyle = "black";
+        ctx.fill();
+    }
+
+    requestAnimationFrame(animate);
+}
+
+function showMainLogin() {
+    // hide animation
+    canvas.style.display = "none";
+
+    // show your real login
+    document.getElementById("mainLogin").style.display = "block";
+}
+
+animate();
 </script></body>
 </html>
