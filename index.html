@@ -95,12 +95,13 @@
 <div id="mainHome" class="main-layout" style="display:none;">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
+    <div class="sidebar">
     <h3>MENU</h3>
     <button onclick="openPapers()">📝 Question Papers</button>
     <button onclick="showTopics()">📚 Topics</button>
     <button onclick="showAbout()">ℹ️ About STC</button>
-  </div>
+    <button onclick="showSpeedPractice()" style="background:#1a5276;">⚡ Speed Practice</button>
+    </div>
 
   <!-- CONTENT -->                                   <!-- to added -->
   <div class="home-content">
@@ -299,6 +300,503 @@ function backToMainHome() {
     <p>Designed for practice, evaluation, and learning.</p>
   `;
  }
-  
+
+ function showSpeedPractice() {
+  document.getElementById('homeContent').innerHTML = `
+    <div id="sp-select">
+      <h1>⚡ Speed Practice</h1>
+      <p style="color:#555">Choose a subject and duration to begin.</p>
+
+      <div style="margin:20px 0;text-align:left;max-width:300px;margin:20px auto">
+        <label style="font-size:13px;color:#888;letter-spacing:1px;text-transform:uppercase">Subject</label><br>
+        <select id="spSubject" onchange="spCheckReady()" style="width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #ccc;font-size:15px">
+          <option value="">— Choose subject —</option>
+          <option value="math">Mathematics</option>
+          <option value="physics">Physics Formulas</option>
+        </select>
+      </div>
+
+      <div style="margin:20px auto;max-width:300px;text-align:left">
+        <label style="font-size:13px;color:#888;letter-spacing:1px;text-transform:uppercase">Duration</label><br>
+        <div style="display:flex;gap:10px;margin-top:10px">
+          <button class="sp-chip" onclick="spSelectTime(this,60)">1 min</button>
+          <button class="sp-chip" onclick="spSelectTime(this,120)">2 min</button>
+          <button class="sp-chip" onclick="spSelectTime(this,300)">5 min</button>
+        </div>
+      </div>
+
+      <button id="spStartBtn" onclick="spStartQuiz()" disabled
+        style="margin-top:20px;padding:12px 40px;background:#1a5276;font-size:16px;border-radius:8px;opacity:0.5">
+        Start
+      </button>
+    </div>
+
+    <div id="sp-quiz" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span id="spBadge" style="font-size:12px;letter-spacing:2px;color:#888;text-transform:uppercase"></span>
+        <span id="spTimer" style="font-size:22px;font-weight:bold;color:#e74c3c"></span>
+      </div>
+      <div style="height:4px;background:#eee;border-radius:4px;margin-bottom:20px">
+        <div id="spProgress" style="height:100%;width:0%;background:#3498db;border-radius:4px;transition:width 0.4s"></div>
+      </div>
+      <p id="spQNum" style="font-size:12px;color:#aaa;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px"></p>
+      <p id="spQText" style="font-size:24px;font-weight:bold;color:#2c3e50;margin:10px 0 24px"></p>
+      <div id="spOptions" style="display:grid;grid-template-columns:1fr 1fr;gap:12px"></div>
+    </div>
+
+    <div id="sp-result" style="display:none">
+      <h1>Results</h1>
+      <div id="spScore" style="font-size:60px;font-weight:bold;color:#2c3e50;margin:10px 0"></div>
+      <p id="spDetail" style="color:#888;font-size:15px"></p>
+      <p id="spAccuracy" style="color:#888;font-size:15px"></p>
+      <p id="spGrade" style="font-size:20px;color:#e67e22;margin:16px 0;font-weight:bold"></p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button onclick="showSpeedPractice()" style="background:#1a5276">Try Again</button>
+        <button onclick="spGoHome()">Back to Home</button>
+      </div>
+    </div>
+  `;
+
+  // inject chip styles
+  if (!document.getElementById('spStyles')) {
+    const s = document.createElement('style');
+    s.id = 'spStyles';
+    s.textContent = `
+      .sp-chip { padding:10px 20px;border:1px solid #3498db;border-radius:50px;background:white;color:#3498db;cursor:pointer;font-size:14px;transition:0.2s; }
+      .sp-chip:hover,.sp-chip.active { background:#3498db;color:white; }
+      .sp-opt { padding:14px;border:1px solid #ddd;border-radius:8px;background:white;font-size:15px;cursor:pointer;transition:0.2s;text-align:center; }
+      .sp-opt:hover:not(:disabled) { background:#eaf4fd;border-color:#3498db; }
+      .sp-opt.correct { background:#eafaf1;border-color:#27ae60;color:#27ae60;font-weight:bold; }
+      .sp-opt.wrong { background:#fdedec;border-color:#e74c3c;color:#e74c3c; }
+    `;
+    document.head.appendChild(s);
+  }
+
+  spSelectedSubject = '';
+  spSelectedTime = 0;
+}
+
+let spSelectedSubject = '', spSelectedTime = 0;
+let spTimerInterval = null, spTimeLeft = 0;
+let spScore = 0, spAttempted = 0, spCurrentAnswer = null, spAnswered = false;
+let spPhysicsPool = [];
+
+function spSelectTime(el, secs) {
+  document.querySelectorAll('.sp-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  spSelectedTime = secs;
+  spCheckReady();
+}
+
+function spCheckReady() {
+  spSelectedSubject = document.getElementById('spSubject').value;
+  const btn = document.getElementById('spStartBtn');
+  btn.disabled = !(spSelectedSubject && spSelectedTime);
+  btn.style.opacity = btn.disabled ? '0.5' : '1';
+}
+
+function spStartQuiz() {
+  spScore = 0; spAttempted = 0; spPhysicsPool = [];
+  spTimeLeft = spSelectedTime;
+  document.getElementById('sp-select').style.display = 'none';
+  document.getElementById('sp-quiz').style.display = 'block';
+  document.getElementById('sp-result').style.display = 'none';
+  document.getElementById('spBadge').textContent = spSelectedSubject === 'math' ? 'Mathematics' : 'Physics Formulas';
+  spUpdateTimer();
+  spLoadQuestion();
+  spTimerInterval = setInterval(() => {
+    spTimeLeft--;
+    spUpdateTimer();
+    if (spTimeLeft <= 0) { clearInterval(spTimerInterval); spShowResults(); }
+  }, 1000);
+}
+
+function spUpdateTimer() {
+  const m = Math.floor(spTimeLeft / 60);
+  const s = spTimeLeft % 60;
+  const el = document.getElementById('spTimer');
+  el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+  el.style.color = spTimeLeft <= 10 ? '#e74c3c' : '#27ae60';
+}
+
+function spLoadQuestion() {
+  spAnswered = false;
+  const q = spSelectedSubject === 'math' ? spGenMath() : spGetPhysics();
+  spCurrentAnswer = q.answer;
+  document.getElementById('spQNum').textContent = `Question ${spAttempted + 1}`;
+  document.getElementById('spQText').textContent = q.question;
+  const pct = ((spSelectedTime - spTimeLeft) / spSelectedTime) * 100;
+  document.getElementById('spProgress').style.width = pct + '%';
+  const grid = document.getElementById('spOptions');
+  grid.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'sp-opt';
+    btn.textContent = opt;
+    btn.onclick = () => spHandleAnswer(opt, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function spHandleAnswer(chosen, btn) {
+  if (spAnswered) return;
+  spAnswered = true; spAttempted++;
+  document.querySelectorAll('.sp-opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent == spCurrentAnswer) b.classList.add('correct');
+  });
+  if (chosen == spCurrentAnswer) { spScore++; btn.classList.add('correct'); }
+  else btn.classList.add('wrong');
+  setTimeout(() => { if (spTimeLeft > 0) spLoadQuestion(); }, 900);
+}
+
+function spShowResults() {
+  clearInterval(spTimerInterval);
+  document.getElementById('sp-quiz').style.display = 'none';
+  document.getElementById('sp-result').style.display = 'block';
+  const acc = spAttempted > 0 ? Math.round((spScore / spAttempted) * 100) : 0;
+  document.getElementById('spScore').textContent = `${spScore} / ${spAttempted}`;
+  document.getElementById('spDetail').textContent = `Questions attempted: ${spAttempted}`;
+  document.getElementById('spAccuracy').textContent = `Accuracy: ${acc}%`;
+  let grade = 'Keep Practicing! 💪';
+  if (acc >= 90) grade = 'Outstanding! 🌟';
+  else if (acc >= 75) grade = 'Great Work! 🎯';
+  else if (acc >= 50) grade = 'Good Effort! 👍';
+  document.getElementById('spGrade').textContent = grade;
+}
+
+function spGoHome() {
+  document.getElementById('homeContent').innerHTML = `
+    <h1>STC</h1>
+    <p>Welcome to the Secure MCQ Test Portal</p>
+    <p>Select an option from the left menu to continue.</p>
+  `;
+}
+
+/* ---- MATH GENERATOR ---- */
+function spGenMath() {
+  const type = Math.floor(Math.random() * 8);
+  let q, answer;
+  if (type === 0) { const a=Math.floor(Math.random()*900)+100,b=Math.floor(Math.random()*900)+100; q=`${a} + ${b} = ?`; answer=a+b; }
+  else if (type===1) { const a=Math.floor(Math.random()*500)+100,b=Math.floor(Math.random()*(a-1))+1; q=`${a} − ${b} = ?`; answer=a-b; }
+  else if (type===2) { const a=Math.floor(Math.random()*19)+2,b=Math.floor(Math.random()*19)+2; q=`${a} × ${b} = ?`; answer=a*b; }
+  else if (type===3) { const a=Math.floor(Math.random()*20)+2; q=`${a}² = ?`; answer=a*a; }
+  else if (type===4) { const p=[10,15,20,25,50][Math.floor(Math.random()*5)],n=[100,200,300,400,500][Math.floor(Math.random()*5)]; q=`${p}% of ${n} = ?`; answer=(p/100)*n; }
+  else if (type===5) { const pairs=[[6,2],[12,4],[15,3],[20,5],[24,6],[36,9],[48,8],[50,10]]; const [a,b]=pairs[Math.floor(Math.random()*pairs.length)]; q=`${a} ÷ ${b} = ?`; answer=a/b; }
+  else if (type===6) { const a=Math.floor(Math.random()*15)+2; q=`√${a*a} = ?`; answer=a; }
+  else { const a=Math.floor(Math.random()*12)+2,b=Math.floor(Math.random()*12)+2,c=Math.floor(Math.random()*20)+5; q=`${a} × ${b} + ${c} = ?`; answer=a*b+c; }
+  return { question:q, options:spNumOptions(answer), answer };
+}
+
+function spNumOptions(correct) {
+  const set = new Set([correct]);
+  const d = [-13,-7,-5,3,5,7,10,13,15,20];
+  let tries=0;
+  while (set.size<4 && tries<50) { const w=correct+d[Math.floor(Math.random()*d.length)]; if(w>0) set.add(w); tries++; }
+  while (set.size<4) set.add(correct+set.size*7);
+  return spShuffle([...set]);
+}
+
+function spShuffle(arr) {
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+/* ---- PHYSICS BANK ---- */
+const SP_PHYSICS = [
+  {question:"Force = ?",answer:"m × a",options:["m × a","m × v","p / t","m × g"]},
+  {question:"Kinetic Energy = ?",answer:"½mv²",options:["½mv²","mv²","mgh","½mgh"]},
+  {question:"Potential Energy = ?",answer:"mgh",options:["mgh","½mv²","mv²","Fd"]},
+  {question:"Work Done = ?",answer:"F × d × cosθ",options:["F × d × cosθ","F / d","F × t","ma × d"]},
+  {question:"Power = ?",answer:"W / t",options:["W / t","F × d","mv / t","ma"]},
+  {question:"Momentum = ?",answer:"m × v",options:["m × v","m × a","F × t²","½mv²"]},
+  {question:"Ohm's Law: V = ?",answer:"I × R",options:["I × R","I / R","P / I","I²R"]},
+  {question:"Speed of Light = ?",answer:"3 × 10⁸ m/s",options:["3 × 10⁸ m/s","3 × 10⁶ m/s","9 × 10⁸ m/s","1.5 × 10⁸ m/s"]},
+  {question:"Gravitational Force: F = ?",answer:"Gm₁m₂/r²",options:["Gm₁m₂/r²","Gm/r","m₁m₂/r","Gm²/r²"]},
+  {question:"Pressure = ?",answer:"F / A",options:["F / A","F × A","m / V","F × d"]},
+  {question:"Density = ?",answer:"m / V",options:["m / V","V / m","m × V","F / V"]},
+  {question:"Wave Speed = ?",answer:"f × λ",options:["f × λ","f / λ","λ / T","f × T"]},
+  {question:"Electric Power = ?",answer:"V × I",options:["V × I","V / I","I² / R","V + I"]},
+  {question:"Acceleration = ?",answer:"(v − u) / t",options:["(v − u) / t","v × t","u + v","v / t²"]},
+  {question:"Distance = ?",answer:"speed × time",options:["speed × time","speed / time","time / speed","speed² × time"]},
+  {question:"Impulse = ?",answer:"F × t",options:["F × t","m × a","F / t","m × v²"]},
+  {question:"Frequency = ?",answer:"1 / T",options:["1 / T","T / 1","v / λ²","λ × T"]},
+  {question:"Refractive Index = ?",answer:"c / v",options:["c / v","v / c","λ / f","f × c"]},
+  {question:"Heat Energy Q = ?",answer:"mcΔT",options:["mcΔT","mc / T","m / cΔT","mΔT / c"]},
+  {question:"Resistance = ?",answer:"V / I",options:["V / I","I / V","V × I","V² / P"]},
+  {question:"Centripetal Force = ?",answer:"mv² / r",options:["mv² / r","mv / r²","m²v / r","mv² × r"]},
+  {question:"Escape Velocity = ?",answer:"√(2GM/r)",options:["√(2GM/r)","√(GM/r)","2GM/r²","√(GM/2r)"]},
+  {question:"Electric Field E = ?",answer:"F / q",options:["F / q","q / F","V × d","F × q"]},
+  {question:"Capacitance C = ?",answer:"Q / V",options:["Q / V","V / Q","Q × V","Q²/ V"]},
+  {question:"Lens Formula: 1/f = ?",answer:"1/v − 1/u",options:["1/v − 1/u","1/u − 1/v","v − u","1/v + 1/u"]},
+  {question:"Snell's Law: n₁sinθ₁ = ?",answer:"n₂sinθ₂",options:["n₂sinθ₂","n₂cosθ₂","n₁sinθ₂","n₂tanθ₁"]},
+  {question:"Torque = ?",answer:"r × F × sinθ",options:["r × F × sinθ","r + F","F / r","r × F × cosθ"]},
+  {question:"Magnetic Force: F = ?",answer:"BIL sinθ",options:["BIL sinθ","BIL cosθ","B / IL","BI / L"]},
+  {question:"Energy in capacitor = ?",answer:"½CV²",options:["½CV²","CV²","½C/V","CV/2²"]},
+  {question:"de Broglie wavelength = ?",answer:"h / mv",options:["h / mv","mv / h","h × mv","h / m²v"]},
+  {question:"Coulomb's Law: F = ?",answer:"kq₁q₂/r²",options:["kq₁q₂/r²","kq/r","q₁q₂/r","kq²/r"]},
+  {question:"Ohm's Law: I = ?",answer:"V / R",options:["V / R","R / V","V × R","P / V²"]},
+  {question:"Angular velocity ω = ?",answer:"2π / T",options:["2π / T","T / 2π","2πT","π / T"]},
+  {question:"Time period of pendulum = ?",answer:"2π√(L/g)",options:["2π√(L/g)","2π√(g/L)","π√(L/g)","√(2πL/g)"]},
+  {question:"Buoyant Force = ?",answer:"ρVg",options:["ρVg","ρV/g","mg/V","ρg/V"]},
+  {question:"Ideal Gas Law: PV = ?",answer:"nRT",options:["nRT","nR/T","RT/n","nT/R"]},
+  {question:"Electric Potential V = ?",answer:"kQ / r",options:["kQ / r","kQ × r","Q / kr","k / Qr"]},
+  {question:"Photoelectric KE_max = ?",answer:"hf − φ",options:["hf − φ","hf + φ","φ − hf","h/f − φ"]},
+  {question:"Lorentz Force: F = ?",answer:"q(v × B)",options:["q(v × B)","qvB cosθ","qB / v","q + vB"]},
+  {question:"Stefan-Boltzmann: P = ?",answer:"σAT⁴",options:["σAT⁴","σT⁴/A","AT⁴","σA/T⁴"]},
+];
+
+function spGetPhysics() {
+  if (spPhysicsPool.length === 0) spPhysicsPool = spShuffle([...SP_PHYSICS]);
+  return spPhysicsPool.pop();
+}function showSpeedPractice() {
+  document.getElementById('homeContent').innerHTML = `
+    <div id="sp-select">
+      <h1>⚡ Speed Practice</h1>
+      <p style="color:#555">Choose a subject and duration to begin.</p>
+
+      <div style="margin:20px 0;text-align:left;max-width:300px;margin:20px auto">
+        <label style="font-size:13px;color:#888;letter-spacing:1px;text-transform:uppercase">Subject</label><br>
+        <select id="spSubject" onchange="spCheckReady()" style="width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #ccc;font-size:15px">
+          <option value="">— Choose subject —</option>
+          <option value="math">Mathematics</option>
+          <option value="physics">Physics Formulas</option>
+        </select>
+      </div>
+
+      <div style="margin:20px auto;max-width:300px;text-align:left">
+        <label style="font-size:13px;color:#888;letter-spacing:1px;text-transform:uppercase">Duration</label><br>
+        <div style="display:flex;gap:10px;margin-top:10px">
+          <button class="sp-chip" onclick="spSelectTime(this,60)">1 min</button>
+          <button class="sp-chip" onclick="spSelectTime(this,120)">2 min</button>
+          <button class="sp-chip" onclick="spSelectTime(this,300)">5 min</button>
+        </div>
+      </div>
+
+      <button id="spStartBtn" onclick="spStartQuiz()" disabled
+        style="margin-top:20px;padding:12px 40px;background:#1a5276;font-size:16px;border-radius:8px;opacity:0.5">
+        Start
+      </button>
+    </div>
+
+    <div id="sp-quiz" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span id="spBadge" style="font-size:12px;letter-spacing:2px;color:#888;text-transform:uppercase"></span>
+        <span id="spTimer" style="font-size:22px;font-weight:bold;color:#e74c3c"></span>
+      </div>
+      <div style="height:4px;background:#eee;border-radius:4px;margin-bottom:20px">
+        <div id="spProgress" style="height:100%;width:0%;background:#3498db;border-radius:4px;transition:width 0.4s"></div>
+      </div>
+      <p id="spQNum" style="font-size:12px;color:#aaa;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px"></p>
+      <p id="spQText" style="font-size:24px;font-weight:bold;color:#2c3e50;margin:10px 0 24px"></p>
+      <div id="spOptions" style="display:grid;grid-template-columns:1fr 1fr;gap:12px"></div>
+    </div>
+
+    <div id="sp-result" style="display:none">
+      <h1>Results</h1>
+      <div id="spScore" style="font-size:60px;font-weight:bold;color:#2c3e50;margin:10px 0"></div>
+      <p id="spDetail" style="color:#888;font-size:15px"></p>
+      <p id="spAccuracy" style="color:#888;font-size:15px"></p>
+      <p id="spGrade" style="font-size:20px;color:#e67e22;margin:16px 0;font-weight:bold"></p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <button onclick="showSpeedPractice()" style="background:#1a5276">Try Again</button>
+        <button onclick="spGoHome()">Back to Home</button>
+      </div>
+    </div>
+  `;
+
+  // inject chip styles
+  if (!document.getElementById('spStyles')) {
+    const s = document.createElement('style');
+    s.id = 'spStyles';
+    s.textContent = `
+      .sp-chip { padding:10px 20px;border:1px solid #3498db;border-radius:50px;background:white;color:#3498db;cursor:pointer;font-size:14px;transition:0.2s; }
+      .sp-chip:hover,.sp-chip.active { background:#3498db;color:white; }
+      .sp-opt { padding:14px;border:1px solid #ddd;border-radius:8px;background:white;font-size:15px;cursor:pointer;transition:0.2s;text-align:center; }
+      .sp-opt:hover:not(:disabled) { background:#eaf4fd;border-color:#3498db; }
+      .sp-opt.correct { background:#eafaf1;border-color:#27ae60;color:#27ae60;font-weight:bold; }
+      .sp-opt.wrong { background:#fdedec;border-color:#e74c3c;color:#e74c3c; }
+    `;
+    document.head.appendChild(s);
+  }
+
+  spSelectedSubject = '';
+  spSelectedTime = 0;
+}
+
+let spSelectedSubject = '', spSelectedTime = 0;
+let spTimerInterval = null, spTimeLeft = 0;
+let spScore = 0, spAttempted = 0, spCurrentAnswer = null, spAnswered = false;
+let spPhysicsPool = [];
+
+function spSelectTime(el, secs) {
+  document.querySelectorAll('.sp-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  spSelectedTime = secs;
+  spCheckReady();
+}
+
+function spCheckReady() {
+  spSelectedSubject = document.getElementById('spSubject').value;
+  const btn = document.getElementById('spStartBtn');
+  btn.disabled = !(spSelectedSubject && spSelectedTime);
+  btn.style.opacity = btn.disabled ? '0.5' : '1';
+}
+
+function spStartQuiz() {
+  spScore = 0; spAttempted = 0; spPhysicsPool = [];
+  spTimeLeft = spSelectedTime;
+  document.getElementById('sp-select').style.display = 'none';
+  document.getElementById('sp-quiz').style.display = 'block';
+  document.getElementById('sp-result').style.display = 'none';
+  document.getElementById('spBadge').textContent = spSelectedSubject === 'math' ? 'Mathematics' : 'Physics Formulas';
+  spUpdateTimer();
+  spLoadQuestion();
+  spTimerInterval = setInterval(() => {
+    spTimeLeft--;
+    spUpdateTimer();
+    if (spTimeLeft <= 0) { clearInterval(spTimerInterval); spShowResults(); }
+  }, 1000);
+}
+
+function spUpdateTimer() {
+  const m = Math.floor(spTimeLeft / 60);
+  const s = spTimeLeft % 60;
+  const el = document.getElementById('spTimer');
+  el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+  el.style.color = spTimeLeft <= 10 ? '#e74c3c' : '#27ae60';
+}
+
+function spLoadQuestion() {
+  spAnswered = false;
+  const q = spSelectedSubject === 'math' ? spGenMath() : spGetPhysics();
+  spCurrentAnswer = q.answer;
+  document.getElementById('spQNum').textContent = `Question ${spAttempted + 1}`;
+  document.getElementById('spQText').textContent = q.question;
+  const pct = ((spSelectedTime - spTimeLeft) / spSelectedTime) * 100;
+  document.getElementById('spProgress').style.width = pct + '%';
+  const grid = document.getElementById('spOptions');
+  grid.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'sp-opt';
+    btn.textContent = opt;
+    btn.onclick = () => spHandleAnswer(opt, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function spHandleAnswer(chosen, btn) {
+  if (spAnswered) return;
+  spAnswered = true; spAttempted++;
+  document.querySelectorAll('.sp-opt').forEach(b => {
+    b.disabled = true;
+    if (b.textContent == spCurrentAnswer) b.classList.add('correct');
+  });
+  if (chosen == spCurrentAnswer) { spScore++; btn.classList.add('correct'); }
+  else btn.classList.add('wrong');
+  setTimeout(() => { if (spTimeLeft > 0) spLoadQuestion(); }, 900);
+}
+
+function spShowResults() {
+  clearInterval(spTimerInterval);
+  document.getElementById('sp-quiz').style.display = 'none';
+  document.getElementById('sp-result').style.display = 'block';
+  const acc = spAttempted > 0 ? Math.round((spScore / spAttempted) * 100) : 0;
+  document.getElementById('spScore').textContent = `${spScore} / ${spAttempted}`;
+  document.getElementById('spDetail').textContent = `Questions attempted: ${spAttempted}`;
+  document.getElementById('spAccuracy').textContent = `Accuracy: ${acc}%`;
+  let grade = 'Keep Practicing! 💪';
+  if (acc >= 90) grade = 'Outstanding! 🌟';
+  else if (acc >= 75) grade = 'Great Work! 🎯';
+  else if (acc >= 50) grade = 'Good Effort! 👍';
+  document.getElementById('spGrade').textContent = grade;
+}
+
+function spGoHome() {
+  document.getElementById('homeContent').innerHTML = `
+    <h1>STC</h1>
+    <p>Welcome to the Secure MCQ Test Portal</p>
+    <p>Select an option from the left menu to continue.</p>
+  `;
+}
+
+/* ---- MATH GENERATOR ---- */
+function spGenMath() {
+  const type = Math.floor(Math.random() * 8);
+  let q, answer;
+  if (type === 0) { const a=Math.floor(Math.random()*900)+100,b=Math.floor(Math.random()*900)+100; q=`${a} + ${b} = ?`; answer=a+b; }
+  else if (type===1) { const a=Math.floor(Math.random()*500)+100,b=Math.floor(Math.random()*(a-1))+1; q=`${a} − ${b} = ?`; answer=a-b; }
+  else if (type===2) { const a=Math.floor(Math.random()*19)+2,b=Math.floor(Math.random()*19)+2; q=`${a} × ${b} = ?`; answer=a*b; }
+  else if (type===3) { const a=Math.floor(Math.random()*20)+2; q=`${a}² = ?`; answer=a*a; }
+  else if (type===4) { const p=[10,15,20,25,50][Math.floor(Math.random()*5)],n=[100,200,300,400,500][Math.floor(Math.random()*5)]; q=`${p}% of ${n} = ?`; answer=(p/100)*n; }
+  else if (type===5) { const pairs=[[6,2],[12,4],[15,3],[20,5],[24,6],[36,9],[48,8],[50,10]]; const [a,b]=pairs[Math.floor(Math.random()*pairs.length)]; q=`${a} ÷ ${b} = ?`; answer=a/b; }
+  else if (type===6) { const a=Math.floor(Math.random()*15)+2; q=`√${a*a} = ?`; answer=a; }
+  else { const a=Math.floor(Math.random()*12)+2,b=Math.floor(Math.random()*12)+2,c=Math.floor(Math.random()*20)+5; q=`${a} × ${b} + ${c} = ?`; answer=a*b+c; }
+  return { question:q, options:spNumOptions(answer), answer };
+}
+
+function spNumOptions(correct) {
+  const set = new Set([correct]);
+  const d = [-13,-7,-5,3,5,7,10,13,15,20];
+  let tries=0;
+  while (set.size<4 && tries<50) { const w=correct+d[Math.floor(Math.random()*d.length)]; if(w>0) set.add(w); tries++; }
+  while (set.size<4) set.add(correct+set.size*7);
+  return spShuffle([...set]);
+}
+
+function spShuffle(arr) {
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+/* ---- PHYSICS BANK ---- */
+const SP_PHYSICS = [
+  {question:"Force = ?",answer:"m × a",options:["m × a","m × v","p / t","m × g"]},
+  {question:"Kinetic Energy = ?",answer:"½mv²",options:["½mv²","mv²","mgh","½mgh"]},
+  {question:"Potential Energy = ?",answer:"mgh",options:["mgh","½mv²","mv²","Fd"]},
+  {question:"Work Done = ?",answer:"F × d × cosθ",options:["F × d × cosθ","F / d","F × t","ma × d"]},
+  {question:"Power = ?",answer:"W / t",options:["W / t","F × d","mv / t","ma"]},
+  {question:"Momentum = ?",answer:"m × v",options:["m × v","m × a","F × t²","½mv²"]},
+  {question:"Ohm's Law: V = ?",answer:"I × R",options:["I × R","I / R","P / I","I²R"]},
+  {question:"Speed of Light = ?",answer:"3 × 10⁸ m/s",options:["3 × 10⁸ m/s","3 × 10⁶ m/s","9 × 10⁸ m/s","1.5 × 10⁸ m/s"]},
+  {question:"Gravitational Force: F = ?",answer:"Gm₁m₂/r²",options:["Gm₁m₂/r²","Gm/r","m₁m₂/r","Gm²/r²"]},
+  {question:"Pressure = ?",answer:"F / A",options:["F / A","F × A","m / V","F × d"]},
+  {question:"Density = ?",answer:"m / V",options:["m / V","V / m","m × V","F / V"]},
+  {question:"Wave Speed = ?",answer:"f × λ",options:["f × λ","f / λ","λ / T","f × T"]},
+  {question:"Electric Power = ?",answer:"V × I",options:["V × I","V / I","I² / R","V + I"]},
+  {question:"Acceleration = ?",answer:"(v − u) / t",options:["(v − u) / t","v × t","u + v","v / t²"]},
+  {question:"Distance = ?",answer:"speed × time",options:["speed × time","speed / time","time / speed","speed² × time"]},
+  {question:"Impulse = ?",answer:"F × t",options:["F × t","m × a","F / t","m × v²"]},
+  {question:"Frequency = ?",answer:"1 / T",options:["1 / T","T / 1","v / λ²","λ × T"]},
+  {question:"Refractive Index = ?",answer:"c / v",options:["c / v","v / c","λ / f","f × c"]},
+  {question:"Heat Energy Q = ?",answer:"mcΔT",options:["mcΔT","mc / T","m / cΔT","mΔT / c"]},
+  {question:"Resistance = ?",answer:"V / I",options:["V / I","I / V","V × I","V² / P"]},
+  {question:"Centripetal Force = ?",answer:"mv² / r",options:["mv² / r","mv / r²","m²v / r","mv² × r"]},
+  {question:"Escape Velocity = ?",answer:"√(2GM/r)",options:["√(2GM/r)","√(GM/r)","2GM/r²","√(GM/2r)"]},
+  {question:"Electric Field E = ?",answer:"F / q",options:["F / q","q / F","V × d","F × q"]},
+  {question:"Capacitance C = ?",answer:"Q / V",options:["Q / V","V / Q","Q × V","Q²/ V"]},
+  {question:"Lens Formula: 1/f = ?",answer:"1/v − 1/u",options:["1/v − 1/u","1/u − 1/v","v − u","1/v + 1/u"]},
+  {question:"Snell's Law: n₁sinθ₁ = ?",answer:"n₂sinθ₂",options:["n₂sinθ₂","n₂cosθ₂","n₁sinθ₂","n₂tanθ₁"]},
+  {question:"Torque = ?",answer:"r × F × sinθ",options:["r × F × sinθ","r + F","F / r","r × F × cosθ"]},
+  {question:"Magnetic Force: F = ?",answer:"BIL sinθ",options:["BIL sinθ","BIL cosθ","B / IL","BI / L"]},
+  {question:"Energy in capacitor = ?",answer:"½CV²",options:["½CV²","CV²","½C/V","CV/2²"]},
+  {question:"de Broglie wavelength = ?",answer:"h / mv",options:["h / mv","mv / h","h × mv","h / m²v"]},
+  {question:"Coulomb's Law: F = ?",answer:"kq₁q₂/r²",options:["kq₁q₂/r²","kq/r","q₁q₂/r","kq²/r"]},
+  {question:"Ohm's Law: I = ?",answer:"V / R",options:["V / R","R / V","V × R","P / V²"]},
+  {question:"Angular velocity ω = ?",answer:"2π / T",options:["2π / T","T / 2π","2πT","π / T"]},
+  {question:"Time period of pendulum = ?",answer:"2π√(L/g)",options:["2π√(L/g)","2π√(g/L)","π√(L/g)","√(2πL/g)"]},
+  {question:"Buoyant Force = ?",answer:"ρVg",options:["ρVg","ρV/g","mg/V","ρg/V"]},
+  {question:"Ideal Gas Law: PV = ?",answer:"nRT",options:["nRT","nR/T","RT/n","nT/R"]},
+  {question:"Electric Potential V = ?",answer:"kQ / r",options:["kQ / r","kQ × r","Q / kr","k / Qr"]},
+  {question:"Photoelectric KE_max = ?",answer:"hf − φ",options:["hf − φ","hf + φ","φ − hf","h/f − φ"]},
+  {question:"Lorentz Force: F = ?",answer:"q(v × B)",options:["q(v × B)","qvB cosθ","qB / v","q + vB"]},
+  {question:"Stefan-Boltzmann: P = ?",answer:"σAT⁴",options:["σAT⁴","σT⁴/A","AT⁴","σA/T⁴"]},
+];
+
+function spGetPhysics() {
+  if (spPhysicsPool.length === 0) spPhysicsPool = spShuffle([...SP_PHYSICS]);
+  return spPhysicsPool.pop();
+}
 </script></body>
 </html>
