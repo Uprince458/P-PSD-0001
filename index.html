@@ -11,11 +11,18 @@
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 999;
-}
+    }
 
 .login-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1000;
+  color: white;
 }
     button { padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
     button:hover { background: #2980b9; }
@@ -25,7 +32,7 @@
     .timer { font-size: 18px; color: #e74c3c; font-weight: bold; text-align: right; }
     input { padding: 8px; width: 100%; max-width: 300px; }
 
-       /*   to be added  */
+       
     /* ===== HOME PAGE LAYOUT ===== */
 .main-layout {
   display: flex;
@@ -197,7 +204,7 @@
     const pass = document.getElementById('accessPassword').value;
     const validPasswords = [GLOBAL_PASSWORD, "123"];
     if (validPasswords.includes(pass)) {
-      document.getElementById('login').style.display = 'none';
+      document.getElementById('mainlogin').style.display = 'none';
       document.getElementById('mainHome').style.display = 'flex';
       loadPapers();
     } else {
@@ -887,11 +894,20 @@ function animate() {
 }
 
 function showMainLogin() {
-    // hide animation
-    canvas.style.display = "none";
+    // fade out animation
+    canvas.style.transition = "opacity 0.8s";
+    canvas.style.opacity = "0";
 
-    // show your real login
-    document.getElementById("mainLogin").style.display = "block";
+    setTimeout(() => {
+        // hide animation
+        canvas.style.display = "none";
+
+        // hide "Welcome" text
+        document.getElementById("introLogin").style.display = "none";
+
+        // show actual login
+        document.getElementById("mainLogin").style.display = "block";
+    }, 800);
 }
 
 animate();
