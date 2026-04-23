@@ -588,7 +588,7 @@ function spGetPhysics() {
   return spPhysicsPool.pop();
 }
   // inject chip styles
-/*  if (!document.getElementById('spStyles')) {
+  if (!document.getElementById('spStyles')) {
     const s = document.createElement('style');
     s.id = 'spStyles';
     s.textContent = `
@@ -604,7 +604,7 @@ function spGetPhysics() {
 
   spSelectedSubject = '';
   spSelectedTime = 0;
-  } */
+  } 
 
 const canvas = document.getElementById("introCanvas");
 const ctx = canvas.getContext("2d");
