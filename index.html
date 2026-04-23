@@ -63,6 +63,14 @@
 .sidebar button:hover {
   background: #1abc9c;
 }
+    <style>
+  /* add this anywhere in your existing <style> tag */
+  .sp-opt {
+    color: #2c3e50 !important;
+  }
+  .sp-opt.correct { color: #27ae60 !important; }
+  .sp-opt.wrong   { color: #e74c3c !important; }
+</style>
 
 /* ===== HOME CONTENT ===== */
 .home-content {
@@ -580,7 +588,7 @@ function spGetPhysics() {
   return spPhysicsPool.pop();
 }
   // inject chip styles
-  if (!document.getElementById('spStyles')) {
+/*  if (!document.getElementById('spStyles')) {
     const s = document.createElement('style');
     s.id = 'spStyles';
     s.textContent = `
@@ -596,7 +604,7 @@ function spGetPhysics() {
 
   spSelectedSubject = '';
   spSelectedTime = 0;
-  }
+  } */
 
 const canvas = document.getElementById("introCanvas");
 const ctx = canvas.getContext("2d");
