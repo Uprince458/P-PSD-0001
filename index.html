@@ -96,7 +96,7 @@
 </head>
 <body><header>
   <h1>STC</h1>
-  <p><h2>MCQ TEST</h2></p>
+  <h2>MCQ TEST</h2>
 </header>
   <canvas id="introCanvas"></canvas>
   <div class="login-container" id="introLogin">
@@ -224,11 +224,17 @@
 
  function startTest() {
   const paperName = document.getElementById('paperSelect').value; 
-   const entered = document.getElementById('paperPassword').value;
-    if (entered !== papers[paperName].password) {
-      document.getElementById('paperError').innerText = 'Wrong paper password';
-      return;
-    }
+  const entered = document.getElementById('paperPassword').value;
+
+  if (!paperName) {
+    document.getElementById('paperError').innerText = 'Please select a paper';
+    return;
+  }
+
+  if (entered !== papers[paperName].password) {
+    document.getElementById('paperError').innerText = 'Wrong paper password';
+    return;
+  }
 
     questions = papers[paperName].questions;
     timeLeft = totalTime * 60;
@@ -267,7 +273,9 @@
   }
 
   function submitTest() {
-    clearInterval(timer);
+  if (!timer) return;
+  clearInterval(timer);
+  timer = null;
     let score = 0, review = '';
     questions.forEach((q, i) => {
       const sel = document.querySelector(`input[name="q${i}"]:checked`);
@@ -588,7 +596,6 @@ function spGetPhysics() {
 
   spSelectedSubject = '';
   spSelectedTime = 0;
-}
 
 
 const canvas = document.getElementById("introCanvas");
